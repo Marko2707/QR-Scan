@@ -1,0 +1,63 @@
+{
+  "name": "qr-scan",
+  "version": "0.2.0",
+  "description": "A snipping-tool style QR code scanner for Windows.",
+  "main": "electron/main.cjs",
+  "author": "QR Scan",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"vite --configLoader runner\" \"wait-on http://localhost:5173 && electron .\"",
+    "build:web": "vite build --configLoader runner",
+    "build": "npm run build:web && electron-builder --win nsis",
+    "build:portable": "npm run build:web && electron-builder --win portable",
+    "generate:icon": "node scripts/generate-icon.cjs",
+    "start": "electron .",
+    "test": "node scripts/smoke-test.cjs",
+    "check": "node --check electron/main.cjs && node --check electron/preload.cjs && node --check electron/overlay-preload.cjs && vite build --configLoader runner"
+  },
+  "dependencies": {
+    "jsqr": "^1.4.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "electron": "^44.8.0",
+    "electron-builder": "^26.0.12",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.5",
+    "vite": "^7.1.10",
+    "wait-on": "^9.0.1"
+  },
+  "build": {
+    "appId": "com.qrscan.desktop",
+    "productName": "QR Scan",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "QR-Scan-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "QR Scan"
+    }
+  }
+}

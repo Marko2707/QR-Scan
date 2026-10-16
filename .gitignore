@@ -205,3 +205,14 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Local Electron caches and packaged output
+.icon-cache/
+node_modules/
+release/
+
+# Electron build resources are source assets, not generated bundles
+!build/
+build/*
+!build/icon.svg
+!build/icon.png
